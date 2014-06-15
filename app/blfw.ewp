@@ -170,6 +170,7 @@
           <name>CCDefines</name>
           <state>USE_STDPERIPH_DRIVER</state>
           <state>STM32F2XX</state>
+          <state>USE_STM322xG_EVAL</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -302,6 +303,10 @@
           <state>$PROJ_DIR$\..\Libraries\CMSIS\CM3\CoreSupport</state>
           <state>$PROJ_DIR$\..\Libraries\CMSIS\Device\ST\STM32F2xx\Include</state>
           <state>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\inc</state>
+          <state>$PROJ_DIR$\..\Utilities\FatFs</state>
+          <state>$PROJ_DIR$\..\Utilities\STM32_EVAL</state>
+          <state>$PROJ_DIR$\..\Utilities\STM32_EVAL\Common</state>
+          <state>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1839,6 +1844,63 @@
     </settings>
   </configuration>
   <group>
+    <name>adc</name>
+    <file>
+      <name>$PROJ_DIR$\adc12.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\adc12.h</name>
+    </file>
+  </group>
+  <group>
+    <name>dac</name>
+    <file>
+      <name>$PROJ_DIR$\dac.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\dac.h</name>
+    </file>
+  </group>
+  <group>
+    <name>eval</name>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval_sdio_sd.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval_sdio_sd.h</name>
+    </file>
+  </group>
+  <group>
+    <name>FatFs</name>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\diskio.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\ff.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\ff.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\ffconf.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\integer.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\sdio-stm32f2.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FatFs\typedefs.h</name>
+    </file>
+  </group>
+  <group>
     <name>periph_driver</name>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
@@ -1943,18 +2005,24 @@
       <name>$PROJ_DIR$\..\Libraries\CMSIS\Device\ST\STM32F2xx\Source\Templates\system_stm32f2xx.c</name>
     </file>
   </group>
-  <file>
-    <name>$PROJ_DIR$\adc12.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\adc12.h</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\dac.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\dac.h</name>
-  </file>
+  <group>
+    <name>systick</name>
+    <file>
+      <name>$PROJ_DIR$\systick.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\systick.h</name>
+    </file>
+  </group>
+  <group>
+    <name>timer</name>
+    <file>
+      <name>$PROJ_DIR$\timer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\timer.h</name>
+    </file>
+  </group>
   <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
@@ -1966,18 +2034,6 @@
   </file>
   <file>
     <name>$PROJ_DIR$\stm32f2xx_it.h</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\systick.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\systick.h</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\timer.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\timer.h</name>
   </file>
 </project>
 

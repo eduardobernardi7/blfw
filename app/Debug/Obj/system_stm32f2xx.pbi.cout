@@ -1,28 +1,45 @@
-"C:\git\blfw\blfw\Libraries\CMSIS\Device\ST\STM32F2xx\Source\Templates\system_stm32f2xx.c"
+"C:\Users\dudu\new\BLFW\Libraries\CMSIS\Device\ST\STM32F2xx\Source\Templates\system_stm32f2xx.c"
 -std=c99
 -ferror-limit=100
 -I
-C:\git\blfw\blfw\app
+C:\Users\dudu\new\BLFW\app
 -I
-C:\git\blfw\blfw\app\..\Libraries\CMSIS\CM3\CoreSupport
+C:\Users\dudu\new\BLFW\app\..\Libraries\CMSIS\CM3\CoreSupport
 -I
-C:\git\blfw\blfw\app\..\Libraries\CMSIS\Device\ST\STM32F2xx\Include
+C:\Users\dudu\new\BLFW\app\..\Libraries\CMSIS\Device\ST\STM32F2xx\Include
 -I
-C:\git\blfw\blfw\app\..\Libraries\STM32F2xx_StdPeriph_Driver\inc
+C:\Users\dudu\new\BLFW\app\..\Libraries\STM32F2xx_StdPeriph_Driver\inc
+-I
+C:\Users\dudu\new\BLFW\app\..\Utilities\FatFs
+-I
+C:\Users\dudu\new\BLFW\app\..\Utilities\STM32_EVAL
+-I
+C:\Users\dudu\new\BLFW\app\..\Utilities\STM32_EVAL\Common
+-I
+C:\Users\dudu\new\BLFW\app\..\Utilities\STM32_EVAL\STM322xG_EVAL
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\inc\c
 -I
-C:\git\blfw\blfw\app
+C:\Users\dudu\new\BLFW\app
 -I
-C:\git\blfw\blfw\Libraries\CMSIS\CM3\CoreSupport
+C:\Users\dudu\new\BLFW\Libraries\CMSIS\CM3\CoreSupport
 -I
-C:\git\blfw\blfw\Libraries\CMSIS\Device\ST\STM32F2xx\Include
+C:\Users\dudu\new\BLFW\Libraries\CMSIS\Device\ST\STM32F2xx\Include
 -I
-C:\git\blfw\blfw\Libraries\STM32F2xx_StdPeriph_Driver\inc
+C:\Users\dudu\new\BLFW\Libraries\STM32F2xx_StdPeriph_Driver\inc
+-I
+C:\Users\dudu\new\BLFW\Utilities\FatFs
+-I
+C:\Users\dudu\new\BLFW\Utilities\STM32_EVAL
+-I
+C:\Users\dudu\new\BLFW\Utilities\STM32_EVAL\Common
+-I
+C:\Users\dudu\new\BLFW\Utilities\STM32_EVAL\STM322xG_EVAL
 -DUSE_STDPERIPH_DRIVER=0
 -DSTM32F2XX=0
+-DUSE_STM322xG_EVAL=0
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -217,8 +234,8 @@ C:\git\blfw\blfw\Libraries\STM32F2xx_StdPeriph_Driver\inc
 -D__HAS_LOCATED_DECLARATION__=1
 -D__HAS_LOCATED_WITH_INIT__=1
 -D__IAR_COMPILERBASE__=593160
--D__DATE__="Jun 12 2014"
--D__TIME__="21:17:25"
+-D__DATE__="Jun 14 2014"
+-D__TIME__="21:05:00"
 -D__STDC__=1
 -D__STDC_VERSION__=199901L
 -D__STDC_HOSTED__=1
@@ -245,6 +262,7 @@ C:\git\blfw\blfw\Libraries\STM32F2xx_StdPeriph_Driver\inc
 -D__EDG_CPP0X_IL_EXTENSIONS_SUPPORTED=1
 -DUSE_STDPERIPH_DRIVER=1
 -DSTM32F2XX=1
+-DUSE_STM322xG_EVAL=1
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\INC\c\DLib_Config_Full.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 6.5\\arm\\INC\\c\\DLib_Config_Full.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM"
