@@ -171,6 +171,8 @@
           <state>USE_STDPERIPH_DRIVER</state>
           <state>STM32F2XX</state>
           <state>USE_STM322xG_EVAL</state>
+          <state>USE_USB_OTG_FS </state>
+          <state>USE_EMBEDDED_PHY</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -303,6 +305,10 @@
           <state>$PROJ_DIR$\..\Libraries\CMSIS\CM3\CoreSupport</state>
           <state>$PROJ_DIR$\..\Libraries\CMSIS\Device\ST\STM32F2xx\Include</state>
           <state>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\inc</state>
+          <state>$PROJ_DIR$\usb_vcp</state>
+          <state>$PROJ_DIR$\..\Libraries\STM32_USB_OTG_Driver\inc</state>
+          <state>$PROJ_DIR$\..\Libraries\STM32_USB_Device_Library\Core\inc</state>
+          <state>$PROJ_DIR$\..\Libraries\STM32_USB_Device_Library\Class\cdc\inc</state>
           <state>$PROJ_DIR$\..\Utilities\FatFs</state>
           <state>$PROJ_DIR$\..\Utilities\STM32_EVAL</state>
           <state>$PROJ_DIR$\..\Utilities\STM32_EVAL\Common</state>
@@ -671,7 +677,7 @@
         </option>
         <option>
           <name>IlinkMapFile</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>IlinkLogFile</name>
@@ -2021,6 +2027,69 @@
     </file>
     <file>
       <name>$PROJ_DIR$\timer.h</name>
+    </file>
+  </group>
+  <group>
+    <name>USB Device</name>
+    <group>
+      <name>Class</name>
+      <group>
+        <name>CDC</name>
+        <file>
+          <name>$PROJ_DIR$\..\Libraries\STM32_USB_Device_Library\Class\cdc\src\usbd_cdc_core.c</name>
+        </file>
+      </group>
+    </group>
+    <group>
+      <name>Library</name>
+      <file>
+        <name>$PROJ_DIR$\..\Libraries\STM32_USB_Device_Library\Core\src\usbd_core.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Libraries\STM32_USB_Device_Library\Core\src\usbd_ioreq.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\Libraries\STM32_USB_Device_Library\Core\src\usbd_req.c</name>
+      </file>
+    </group>
+  </group>
+  <group>
+    <name>USB Drivers</name>
+    <file>
+      <name>$PROJ_DIR$\..\Libraries\STM32_USB_OTG_Driver\src\usb_core.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Libraries\STM32_USB_OTG_Driver\src\usb_dcd.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Libraries\STM32_USB_OTG_Driver\src\usb_dcd_int.c</name>
+    </file>
+  </group>
+  <group>
+    <name>usb_vcp</name>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usb_bsp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usb_conf.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usbd_cdc_vcp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usbd_cdc_vcp.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usbd_conf.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usbd_desc.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usbd_desc.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usb_vcp\usbd_usr.c</name>
     </file>
   </group>
   <file>

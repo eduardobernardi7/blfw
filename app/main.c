@@ -1,13 +1,29 @@
 #include "stm32f2xx.h"
 
-#include "systick.h"
-#include "dac.h"
-#include "timer.h"
-#include "adc12.h"
-
+/******************************************************************************/
+/* Application Switches for tests */
 #define FAT_FS_TEST
+#define USB_ECHO_VCP_TEST
 
-#ifdef FAT_FS_TEST
+/******************************************************************************/
+
+/* USB STACK */
+#include "usbd_cdc_core.h"
+#include "usbd_usr.h"
+#include "usb_conf.h"
+#include "usbd_desc.h"
+
+ #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+  #if defined ( __ICCARM__ ) /*!< IAR Compiler */
+    #pragma data_alignment=4   
+  #endif
+#endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
+
+__ALIGN_BEGIN USB_OTG_CORE_HANDLE    USB_OTG_dev __ALIGN_END ;
+
+/******************************************************************************/
+
+/* FATFS STACK */
 #include "stm322xg_eval_sdio_sd.h"
 #include "ff.h"
 #include "diskio.h"
@@ -21,13 +37,33 @@ FATFS fs32;
 BYTE Buffer[512];
 UINT BytesRead;
 UINT BytesWritten;
-#endif
+
+/******************************************************************************/
+
+/* Application */
+#include "systick.h"
+#include "dac.h"
+#include "timer.h"
+#include "adc12.h"
+
+/******************************************************************************/
 
 int main()
 {
   
-#ifdef FAT_FS_TEST
-  
+#ifdef USB_ECHO_VCP_TEST
+     USBD_Init(&USB_OTG_dev,
+#ifdef USE_USB_OTG_HS 
+            USB_OTG_HS_CORE_ID,
+#else            
+            USB_OTG_FS_CORE_ID,
+#endif  
+            &USR_desc, 
+            &USBD_CDC_cb, 
+            &USR_cb);
+#endif
+
+#ifdef FAT_FS_TEST  
   /* Interrupt Config */
   SD_InterruptEnable();
 
@@ -54,6 +90,8 @@ int main()
   }
   
 #endif
+  
+
   
   GPIO_InitTypeDef  GPIO_InitStructure;
   
