@@ -22,7 +22,6 @@ void SYSTICK_Init(void)
 {
   RCC_ClocksTypeDef RCC_Clocks;
   
-  /* SysTick end of count event each 10ms */
   RCC_GetClocksFreq(&RCC_Clocks);
   //SysTick_Config(SystemCoreClock/100);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);

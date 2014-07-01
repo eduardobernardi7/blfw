@@ -1,11 +1,98 @@
 #include "adc12.h"
+#include "utils.h"
+#include "dac.h"
 
+#include "usbd_cdc_vcp.h"
+
+#include "stdio.h"
+#include "string.h"
+#include "intrinsics.h"
+
+
+/* NUM OF CHANNELS definition */
 #define ADC12_NUM_OF_CHANNELS   6  
 
 /* endereco do reg ADC1 pg51 e 249 do reference manual ! */
 #define ADC_CDR_ADDRESS         ((uint32_t)0x4001204C) 
 
+/* Buffer length definitions */
+#define MEASURE_BUF_SIZE 512
+
+/* Time interval for reporting all measures */
+#define MEASURE_REPORT_TIME_MS  1000
+
+/* Private types */
+typedef struct measure_s
+{
+  uint16_t vsense1[MEASURE_BUF_SIZE];
+  uint16_t isense1[MEASURE_BUF_SIZE];
+  int16_t write_index;
+  int16_t read_index;  
+  
+  uint32_t vsense1_last_result;
+  uint32_t isense1_last_result;
+}measure_t;
+
+/* Private attributes */
+uint8_t adc12_rdy = 0;
+
+uint8_t dac_tog = 0;
+
+measure_t measure;
+
+static __IO uint32_t adc12_1ms_tick;
+
 __IO    uint16_t adc12buf[ADC12_NUM_OF_CHANNELS];
+
+
+/* Private methods */
+void ADC12_InitMeasureStruct(measure_t * _measure);
+void ADC12_Measure2USB(measure_t * _measure);
+void ADC12_DacTog(void);
+
+
+void ADC12_InitMeasureStruct(measure_t * _measure)
+{
+  uint32_t i;
+  
+  for(i = 0; i < MEASURE_BUF_SIZE; i++)
+  {
+    _measure->isense1[i] = 0x00;    
+  }
+  
+  for(i = 0; i < MEASURE_BUF_SIZE; i++)
+  {
+    _measure->vsense1[i] = 0x00;
+  }
+  
+  _measure->write_index = _measure->read_index = 0;
+  
+}
+
+void ADC12_Measure2USB(measure_t * _measure)
+{
+  char usb_string[100];
+  
+  memset(usb_string, 0, sizeof(usb_string));  
+  
+  sprintf(usb_string, "ISENSE1 -> %d \r\nVSENSE1 -> %d \r\n", _measure->isense1_last_result, _measure->vsense1_last_result);
+  
+  USB_SendString(usb_string);  
+}
+
+void ADC12_DacTog(void)
+{
+  dac_tog ^= 0x01;
+  
+  if(dac_tog)
+  {
+    DAC_SetVctr(0,124);    
+  }
+  else
+  {
+    DAC_SetVctr(0,372); 
+  }  
+}
 
 void ADC12_Init(void)
 {
@@ -53,7 +140,7 @@ void ADC12_Init(void)
   
   /*  5cycles delay - 6Msps (Ui) */
   ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_20Cycles; //5
   ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;  
   ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2; 
   ADC_CommonInit(&ADC_CommonInitStructure);
@@ -87,4 +174,54 @@ void ADC12_Init(void)
   
   ADC_SoftwareStartConv(ADC1);
   
+  ADC12_InitMeasureStruct(&measure);
+  
+  adc12_1ms_tick = MEASURE_REPORT_TIME_MS;
+  
+  adc12_rdy = 1;
 }
+
+void ADC12_Tick(void)
+{
+  if(adc12_1ms_tick != 0x00)
+  {
+    adc12_1ms_tick -= 1;
+  }
+  else
+  {
+    adc12_1ms_tick = MEASURE_REPORT_TIME_MS;
+    if(adc12_rdy)
+    {
+      ADC12_DacTog();
+      DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, DISABLE); 
+      ADC12_Measure2USB(&measure); 
+      DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
+    }
+  }  
+}
+
+void ADC12_HandleData(void)
+{
+  uint32_t i;
+  
+  measure.isense1[measure.write_index] = adc12buf[1];
+  measure.vsense1[measure.write_index] = adc12buf[0];
+  measure.write_index = circindex(measure.write_index, 1, MEASURE_BUF_SIZE);  
+  
+  if(measure.write_index == 0)
+  {
+    measure.isense1_last_result = measure.vsense1_last_result = 0;
+    
+    for(i = 0; i < MEASURE_BUF_SIZE; i++)
+    {
+      measure.isense1_last_result += measure.isense1[i];
+      measure.vsense1_last_result += measure.vsense1[i];      
+    }
+    
+    measure.isense1_last_result /= MEASURE_BUF_SIZE;
+    measure.vsense1_last_result /= MEASURE_BUF_SIZE;
+  }
+  
+}
+
+

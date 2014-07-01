@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=823577628
+Checksum=-792318196
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -89,7 +89,7 @@ Graph=0
 Symbiont=0
 Exclusions=
 [Disassemble mode]
-mode=0
+mode=2
 [Breakpoints2]
 Count=0
 [Aliases]

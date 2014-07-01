@@ -69,6 +69,8 @@ typedef struct
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
+void USB_SendString(char * string);
+
 #endif /* __USBD_CDC_VCP_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

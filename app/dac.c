@@ -1,5 +1,6 @@
 #include "dac.h"
 
+uint8_t dac_rdy = 0;
 
 void DAC_HwInit()
 {
@@ -27,7 +28,16 @@ void DAC_HwInit()
   DAC_Cmd(DAC_Channel_2, ENABLE);
   
   /* Para testes - Canal 1(Test probe DRV1) -  aprox 2V, Canal 2 - aprox 1V */
-  DAC_SetDualChannelData(DAC_Align_12b_R, 1242, 2484);
+  DAC_SetDualChannelData(DAC_Align_12b_R, 1242, 124);
   
+  dac_rdy = 1;
   
+}
+
+void DAC_SetVctr(uint16_t vctr2, uint16_t vctr1)
+{
+  if(dac_rdy)
+  {
+    DAC_SetDualChannelData(DAC_Align_12b_R, vctr2, vctr1);
+  }
 }

@@ -33,6 +33,9 @@
 #include "usbd_cdc_vcp.h"
 #include "usb_conf.h"
 
+#include "string.h"
+#include "stdio.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -188,13 +191,14 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
       APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i] ;
     }
     APP_Rx_ptr_in++;    
+    
+    /* To avoid buffer overflow */
+    if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
+    {
+      APP_Rx_ptr_in = 0;
+    }  
   }  
   
-  /* To avoid buffer overflow */
-  if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
-  {
-    APP_Rx_ptr_in = 0;
-  }  
   
   return USBD_OK;
 }
@@ -240,6 +244,11 @@ static uint16_t VCP_COMConfig(uint8_t Conf)
 */
 void EVAL_COM_IRQHandler(void)
 {
+}
+
+void USB_SendString(char * string)
+{
+  VCP_DataTx((uint8_t*)string, strlen(string));
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
