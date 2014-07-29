@@ -1907,6 +1907,33 @@
     </file>
   </group>
   <group>
+    <name>fifo</name>
+    <file>
+      <name>$PROJ_DIR$\fifo.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\fifo.h</name>
+    </file>
+  </group>
+  <group>
+    <name>fsm</name>
+    <file>
+      <name>$PROJ_DIR$\fsm.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\fsm.h</name>
+    </file>
+  </group>
+  <group>
+    <name>iv</name>
+    <file>
+      <name>$PROJ_DIR$\IV.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\IV.h</name>
+    </file>
+  </group>
+  <group>
     <name>periph_driver</name>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>

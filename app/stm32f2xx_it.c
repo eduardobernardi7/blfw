@@ -33,6 +33,7 @@
 #include "systick.h"
 #include "timer.h"
 #include "adc12.h"
+#include "IV.h"
 
 #include "usb_core.h"
 #include "usbd_core.h"
@@ -173,7 +174,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   SYSTICK_tick();
-  ADC12_Tick();
+  IV_Timertick();
 }
 
 /* Somente para Testes de modos Capture e Compare */
@@ -239,7 +240,7 @@ void DMA2_Stream0_IRQHandler(void)
 {
   if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
   {
-    ADC12_HandleData();  
+    ADC12_FilterDMASamples(); 
     DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
   }
 }

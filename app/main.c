@@ -45,6 +45,7 @@ UINT BytesWritten;
 #include "dac.h"
 #include "timer.h"
 #include "adc12.h"
+#include "IV.h"
 
 /******************************************************************************/
 
@@ -116,15 +117,21 @@ int main()
   TIMER_DemoIrGenStructInit();
   
   ADC12_Init();
+  IV_Init();
+  IV_Perform_Curve();
   
   for(;;)
   {
+    IV_Process(); 
+    
+#if(0)
     GPIOE->ODR ^= GPIO_Pin_1;
     GPIOE->ODR ^= GPIO_Pin_2;
     GPIOE->ODR ^= GPIO_Pin_4;
     GPIOE->ODR ^= GPIO_Pin_7;    
     
     SYSTICK_delay_ms(1);
+#endif
     
   }
 }
