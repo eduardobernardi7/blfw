@@ -25,5 +25,9 @@ void TIMER_InputCaptureCh2Init(void);
 tim_capture * TIMER_GetCaptureCh2Struct(void);
 void TIMER_DemoIrGenStructInit(void);
 tim_ir_gen * TIMER_GetIrGenStruct(void);
+void TIMER8_OutputcompareCh2Init(void);
+void TIM8_delay_ms(__IO uint32_t nTime);
+void TIM8_tick(void);
+
 
 #endif /* __TIMER_H */

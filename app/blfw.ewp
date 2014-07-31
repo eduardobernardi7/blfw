@@ -173,6 +173,8 @@
           <state>USE_STM322xG_EVAL</state>
           <state>USE_USB_OTG_FS </state>
           <state>USE_EMBEDDED_PHY</state>
+          <state>VECT_TAB_FLASH</state>
+          <state>IAR_ARM_CM3</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -313,6 +315,10 @@
           <state>$PROJ_DIR$\..\Utilities\STM32_EVAL</state>
           <state>$PROJ_DIR$\..\Utilities\STM32_EVAL\Common</state>
           <state>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL</state>
+          <state>$PROJ_DIR$\..\Utilities\FatFs</state>
+          <state>$PROJ_DIR$\..\Utilities\FreeRtos</state>
+          <state>$PROJ_DIR$\..\Utilities\FreeRtos\Source\include</state>
+          <state>$PROJ_DIR$\..\Utilities\FreeRtos\Common\include</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1916,6 +1922,27 @@
     </file>
   </group>
   <group>
+    <name>FreeRtos</name>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FreeRtos\Source\portable\MemMang\heap_2.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FreeRtos\Source\list.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FreeRtos\Source\portable\IAR\ARM_CM3\port.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FreeRtos\Source\portable\IAR\ARM_CM3\portasm.s</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FreeRtos\Source\queue.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Utilities\FreeRtos\Source\tasks.c</name>
+    </file>
+  </group>
+  <group>
     <name>fsm</name>
     <file>
       <name>$PROJ_DIR$\fsm.c</name>
@@ -2046,6 +2073,9 @@
     <file>
       <name>$PROJ_DIR$\systick.h</name>
     </file>
+  </group>
+  <group>
+    <name>tasks</name>
   </group>
   <group>
     <name>timer</name>

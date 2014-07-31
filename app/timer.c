@@ -3,6 +3,7 @@
 
 tim_capture     capture_ch2;
 tim_ir_gen      ir_gen;
+static __IO uint32_t tim8_tick;
 
 void TIMER_CaptureStructInit(void);
 
@@ -126,5 +127,62 @@ void TIMER_OutputCompareCh3Init()
 
   TIM_ITConfig(TIM1, TIM_IT_CC3, ENABLE);
   
+}
+
+void TIMER8_OutputcompareCh2Init()
+{
+  uint16_t PrescalerValue = 0;
+  
+  NVIC_InitTypeDef              NVIC_InitStructure;
+  TIM_TimeBaseInitTypeDef       TIM_TimeBaseStructure;
+  TIM_OCInitTypeDef             TIM_OCInitStructure;
+  
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM8, ENABLE);
+  
+  NVIC_InitStructure.NVIC_IRQChannel = TIM8_CC_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+  
+   /* TIM8 eh clockeado com 120 Mhz */
+  PrescalerValue = (uint16_t) ((SystemCoreClock) / 60000) - 1; //prescaler para 60 MHz
+
+  TIM_TimeBaseStructure.TIM_Period = 0xFFFF; // 16 bits de resolucao
+  TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+  TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // 0 - 65535
+  
+  TIM_TimeBaseInit(TIM8, &TIM_TimeBaseStructure);
+  
+  TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_Timing;
+  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+  TIM_OCInitStructure.TIM_Pulse = 0;
+  TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+  
+  TIM_OC2Init(TIM8, &TIM_OCInitStructure);
+  
+  TIM_OC2PreloadConfig(TIM8, TIM_OCPreload_Disable);
+  
+  TIM_Cmd(TIM8, ENABLE);
+
+  TIM_ITConfig(TIM8, TIM_IT_CC2, ENABLE);
+  
+  
+}
+
+void TIM8_delay_ms(__IO uint32_t nTime)
+{
+  tim8_tick = nTime;
+
+  while(tim8_tick != 0);
+}
+
+void TIM8_tick(void)
+{
+  if (tim8_tick != 0x00)
+  { 
+    tim8_tick--;
+  }
 }
 

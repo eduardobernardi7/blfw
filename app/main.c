@@ -39,6 +39,17 @@ UINT BytesRead;
 UINT BytesWritten;
 
 /******************************************************************************/
+/* RTOS */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+
+#define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
+#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
+#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+static void vTestTask( void *pvParameters );
+
+/******************************************************************************/
 
 /* Application */
 #include "systick.h"
@@ -48,9 +59,20 @@ UINT BytesWritten;
 #include "IV.h"
 
 /******************************************************************************/
+/* MAIN */
 
+//Thousands of test involving all features listed above
+//Plaese, disregard the lack of organization on main function 
+
+/******************************************************************************/
 int main()
 {
+
+  //I have no idea what this means, RTOS needed nvic configured like this
+  NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x0 );
+  NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+  
+  SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
   
 #ifdef USB_ECHO_VCP_TEST
      USBD_Init(&USB_OTG_dev,
@@ -96,7 +118,7 @@ int main()
   
   GPIO_InitTypeDef  GPIO_InitStructure;
   
-  SYSTICK_Init();
+  //SYSTICK_Init();
   
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
   
@@ -111,18 +133,31 @@ int main()
   
   DAC_HwInit();
   
-  /* Testes de medicao e reproducao de pulsos */
+  /* Pulse capture and reproduction using tim1*/
   TIMER_InputCaptureCh2Init();
   TIMER_OutputCompareCh3Init();
   TIMER_DemoIrGenStructInit();
   
+  /*TIM8 will be used as a tick reference timer instead of systick */
+  TIMER8_OutputcompareCh2Init();
+    
   ADC12_Init();
   IV_Init();
+  
+#if(1)    
+  xTaskCreate( vTestTask, "LEDx", ledSTACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, ( TaskHandle_t * ) NULL );
+  vTaskStartScheduler();
+#endif
+  
+#if(0)
   IV_Perform_Curve();
+#endif
   
   for(;;)
   {
+#if(0)
     IV_Process(); 
+#endif
     
 #if(0)
     GPIOE->ODR ^= GPIO_Pin_1;
@@ -130,10 +165,39 @@ int main()
     GPIOE->ODR ^= GPIO_Pin_4;
     GPIOE->ODR ^= GPIO_Pin_7;    
     
-    SYSTICK_delay_ms(1);
+    TIM8_delay_ms(1);
 #endif
     
   }
 }
 
+
+static void vTestTask( void *pvParameters )
+{
+  TickType_t xFlashRate, xLastFlashTime;
+  
+  xFlashRate = ledFLASH_RATE_BASE;
+  xFlashRate /= portTICK_PERIOD_MS;
+
+  xFlashRate /= ( TickType_t ) 2;
+  
+  xLastFlashTime = xTaskGetTickCount();
+  
+  for(;;)
+  {
+    vTaskDelayUntil( &xLastFlashTime, xFlashRate );
+    
+    GPIOE->ODR ^= GPIO_Pin_1;
+    GPIOE->ODR ^= GPIO_Pin_2;
+    GPIOE->ODR ^= GPIO_Pin_4;
+    GPIOE->ODR ^= GPIO_Pin_7;  
+    
+    vTaskDelayUntil( &xLastFlashTime, xFlashRate );
+    
+    GPIOE->ODR ^= GPIO_Pin_1;
+    GPIOE->ODR ^= GPIO_Pin_2;
+    GPIOE->ODR ^= GPIO_Pin_4;
+    GPIOE->ODR ^= GPIO_Pin_7;    
+  }
+}
 

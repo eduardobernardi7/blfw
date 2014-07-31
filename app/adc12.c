@@ -4,7 +4,7 @@
 // EB - 07/2014 - Initial Version
 
 #include "adc12.h"
-#include "systick.h"
+#include "timer.h" // freertos owns systick, using tim8 instead
 
 // ADC1 address as stated in RM0033 PG51 and 249
 #define ADC_CDR_ADDRESS         ((uint32_t)0x4001204C) 
@@ -151,7 +151,7 @@ void ADC12_Init(void)
     ADC_Cmd(ADC1, ENABLE);
     ADC_SoftwareStartConv(ADC1);
     
-    SYSTICK_delay_ms(1);
+    TIM8_delay_ms(1);
     
     // Calibrate Vref
     ADC12_CalibrateVref();

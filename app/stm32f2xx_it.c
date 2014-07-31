@@ -236,6 +236,24 @@ void TIM1_CC_IRQHandler(void)
   
 }
 
+//I used time8 as output compare timer, the counter counts until 0xFFFF,
+//but every time it reaches the compare value a interrupt is generated
+// in this way i have a very accurate timing base
+void TIM8_CC_IRQHandler(void)
+{
+  __IO uint32_t current_capture;
+  
+  if (TIM_GetITStatus(TIM8, TIM_IT_CC2) == SET)
+  { 
+    TIM_ClearITPendingBit(TIM8, TIM_IT_CC2 );
+    current_capture = TIM_GetCapture2(TIM8);
+    //tim8 clock 60 Mhz, to reach 1Khz we need 60 ticks !
+    TIM_SetCompare2(TIM8, current_capture + 60); // every interrupt on 60 ticks   
+    TIM8_tick();
+  }
+  
+}
+
 void DMA2_Stream0_IRQHandler(void)
 {
   if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)

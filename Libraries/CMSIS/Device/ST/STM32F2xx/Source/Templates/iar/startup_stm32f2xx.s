@@ -48,6 +48,13 @@
 ; Cortex-M version
 ;
 
+;PendSV_Handler
+;SysTick_Handler
+;SVC_Handler
+;xPortPendSVHandler
+;xPortSysTickHandler
+;vPortSVCHandler
+
         MODULE  ?cstartup
 
         ;; Forward declaration of sections.
@@ -73,11 +80,11 @@ __vector_table
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
-        DCD     SVC_Handler               ; SVCall Handler
+        DCD     vPortSVCHandler               ; SVCall Handler
         DCD     DebugMon_Handler          ; Debug Monitor Handler
         DCD     0                         ; Reserved
-        DCD     PendSV_Handler            ; PendSV Handler
-        DCD     SysTick_Handler           ; SysTick Handler
+        DCD     xPortPendSVHandler            ; PendSV Handler
+        DCD     xPortSysTickHandler           ; SysTick Handler
 
          ; External Interrupts
         DCD     WWDG_IRQHandler                   ; Window WatchDog                                        
@@ -200,25 +207,25 @@ BusFault_Handler
 UsageFault_Handler
         B UsageFault_Handler
 
-        PUBWEAK SVC_Handler
+        PUBWEAK vPortSVCHandler
         SECTION .text:CODE:REORDER(1)
-SVC_Handler
-        B SVC_Handler
+vPortSVCHandler
+        B vPortSVCHandler
 
         PUBWEAK DebugMon_Handler
         SECTION .text:CODE:REORDER(1)
 DebugMon_Handler
         B DebugMon_Handler
 
-        PUBWEAK PendSV_Handler
+        PUBWEAK xPortPendSVHandler
         SECTION .text:CODE:REORDER(1)
-PendSV_Handler
-        B PendSV_Handler
+xPortPendSVHandler
+        B xPortPendSVHandler
 
-        PUBWEAK SysTick_Handler
+        PUBWEAK xPortSysTickHandler
         SECTION .text:CODE:REORDER(1)
-SysTick_Handler
-        B SysTick_Handler
+xPortSysTickHandler
+        B xPortSysTickHandler
 
         PUBWEAK WWDG_IRQHandler
         SECTION .text:CODE:REORDER(1)

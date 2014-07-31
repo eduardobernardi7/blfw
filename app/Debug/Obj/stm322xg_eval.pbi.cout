@@ -26,6 +26,14 @@ C:\git\blfw\blfw_fork_EB\app\..\Utilities\STM32_EVAL\Common
 -I
 C:\git\blfw\blfw_fork_EB\app\..\Utilities\STM32_EVAL\STM322xG_EVAL
 -I
+C:\git\blfw\blfw_fork_EB\app\..\Utilities\FatFs
+-I
+C:\git\blfw\blfw_fork_EB\app\..\Utilities\FreeRtos
+-I
+C:\git\blfw\blfw_fork_EB\app\..\Utilities\FreeRtos\Source\include
+-I
+C:\git\blfw\blfw_fork_EB\app\..\Utilities\FreeRtos\Common\include
+-I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\inc\c
@@ -53,11 +61,21 @@ C:\git\blfw\blfw_fork_EB\Utilities\STM32_EVAL
 C:\git\blfw\blfw_fork_EB\Utilities\STM32_EVAL\Common
 -I
 C:\git\blfw\blfw_fork_EB\Utilities\STM32_EVAL\STM322xG_EVAL
+-I
+C:\git\blfw\blfw_fork_EB\Utilities\FatFs
+-I
+C:\git\blfw\blfw_fork_EB\Utilities\FreeRtos
+-I
+C:\git\blfw\blfw_fork_EB\Utilities\FreeRtos\Source\include
+-I
+C:\git\blfw\blfw_fork_EB\Utilities\FreeRtos\Common\include
 -DUSE_STDPERIPH_DRIVER=0
 -DSTM32F2XX=0
 -DUSE_STM322xG_EVAL=0
 -DUSE_USB_OTG_FS=0
 -DUSE_EMBEDDED_PHY=0
+-DVECT_TAB_FLASH=0
+-DIAR_ARM_CM3=0
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -252,8 +270,8 @@ C:\git\blfw\blfw_fork_EB\Utilities\STM32_EVAL\STM322xG_EVAL
 -D__HAS_LOCATED_DECLARATION__=1
 -D__HAS_LOCATED_WITH_INIT__=1
 -D__IAR_COMPILERBASE__=593160
--D__DATE__="Jul 29 2014"
--D__TIME__="03:02:36"
+-D__DATE__="Jul 31 2014"
+-D__TIME__="03:49:15"
 -D__STDC__=1
 -D__STDC_VERSION__=199901L
 -D__STDC_HOSTED__=1
@@ -283,6 +301,8 @@ C:\git\blfw\blfw_fork_EB\Utilities\STM32_EVAL\STM322xG_EVAL
 -DUSE_STM322xG_EVAL=1
 -DUSE_USB_OTG_FS=1
 -DUSE_EMBEDDED_PHY=1
+-DVECT_TAB_FLASH=1
+-DIAR_ARM_CM3=1
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.5\arm\INC\c\DLib_Config_Full.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 6.5\\arm\\INC\\c\\DLib_Config_Full.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V6.50.3.4676/W32 for ARM"
