@@ -2,7 +2,6 @@
 
 /******************************************************************************/
 /* Application Switches for tests */
-#define FAT_FS_TEST
 #define USB_ECHO_VCP_TEST
 
 /******************************************************************************/
@@ -45,8 +44,8 @@ UINT BytesWritten;
 #include "queue.h"
 
 #define ledSTACK_SIZE		configMINIMAL_STACK_SIZE
-#define ledFLASH_RATE_BASE	( ( TickType_t ) 333 )
-#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 1 )
+#define ledFLASH_RATE_BASE	( ( TickType_t ) 500 )
+#define mainFLASH_TASK_PRIORITY				( tskIDLE_PRIORITY + 2 )
 static void vTestTask( void *pvParameters );
 
 /******************************************************************************/
@@ -57,12 +56,22 @@ static void vTestTask( void *pvParameters );
 #include "timer.h"
 #include "adc12.h"
 #include "IV.h"
+#include "ihm.h"
 
 /******************************************************************************/
 /* MAIN */
 
 //Thousands of test involving all features listed above
 //Plaese, disregard the lack of organization on main function 
+
+/******************************************************************************/
+
+/******************************************************************************/
+/* USER GUIDE */
+
+// Press S2 button to build a curve, if the curve was written successfully
+// on sd card USER_LED1 will be on, otherwise USER_LED2 will be on instead
+// led 0 will flash constantly indicating that FreeRtos is running !
 
 /******************************************************************************/
 int main()
@@ -84,53 +93,8 @@ int main()
             &USR_desc, 
             &USBD_CDC_cb, 
             &USR_cb);
-#endif
-
-#ifdef FAT_FS_TEST  
-  /* Interrupt Config */
-  SD_InterruptEnable();
-
-  memset(&fs32, 0, sizeof(FATFS));
-  
-  res = f_mount(0, &fs32);
-  
-  res = f_open(&fil, "DUDU.TXT", FA_READ);
-  
-  if(res == FR_OK)
-  {
-    res = f_read(&fil, Buffer, sizeof(Buffer), &BytesRead);
-    
-    res = f_close(&fil);
-  }  
-  
-  res = f_open(&fil, "DUDU.TXT", FA_CREATE_ALWAYS | FA_WRITE);
-  
-  if (res == FR_OK)
-  {
-    char * s = "Hello word \r\n";
-    res = f_write(&fil, s, strlen(s), &BytesWritten);
-    res = f_close(&fil); // LENGTH.TXT
-  }
-  
-#endif
-  
-
-  
-  GPIO_InitTypeDef  GPIO_InitStructure;
-  
-  //SYSTICK_Init();
-  
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-  
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_7;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOE, &GPIO_InitStructure);
-  
-  GPIOE->ODR |= GPIO_Pin_3;
-  
+#endif  
+     
   DAC_HwInit();
   
   /* Pulse capture and reproduction using tim1*/
@@ -140,46 +104,27 @@ int main()
   
   /*TIM8 will be used as a tick reference timer instead of systick */
   TIMER8_OutputcompareCh2Init();
-    
+   
   ADC12_Init();
   IV_Init();
+  IHM_Init();  
   
 #if(1)    
   xTaskCreate( vTestTask, "LEDx", ledSTACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, ( TaskHandle_t * ) NULL );
+#endif  
+
   vTaskStartScheduler();
-#endif
   
-#if(0)
-  IV_Perform_Curve();
-#endif
-  
-  for(;;)
-  {
-#if(0)
-    IV_Process(); 
-#endif
-    
-#if(0)
-    GPIOE->ODR ^= GPIO_Pin_1;
-    GPIOE->ODR ^= GPIO_Pin_2;
-    GPIOE->ODR ^= GPIO_Pin_4;
-    GPIOE->ODR ^= GPIO_Pin_7;    
-    
-    TIM8_delay_ms(1);
-#endif
-    
-  }
+  for(;;);
 }
 
-
+// fancy task :D
 static void vTestTask( void *pvParameters )
 {
   TickType_t xFlashRate, xLastFlashTime;
   
   xFlashRate = ledFLASH_RATE_BASE;
   xFlashRate /= portTICK_PERIOD_MS;
-
-  xFlashRate /= ( TickType_t ) 2;
   
   xLastFlashTime = xTaskGetTickCount();
   
@@ -187,17 +132,11 @@ static void vTestTask( void *pvParameters )
   {
     vTaskDelayUntil( &xLastFlashTime, xFlashRate );
     
-    GPIOE->ODR ^= GPIO_Pin_1;
-    GPIOE->ODR ^= GPIO_Pin_2;
-    GPIOE->ODR ^= GPIO_Pin_4;
-    GPIOE->ODR ^= GPIO_Pin_7;  
+    IHM_SetLed(USER_LED0, TOG);
     
     vTaskDelayUntil( &xLastFlashTime, xFlashRate );
     
-    GPIOE->ODR ^= GPIO_Pin_1;
-    GPIOE->ODR ^= GPIO_Pin_2;
-    GPIOE->ODR ^= GPIO_Pin_4;
-    GPIOE->ODR ^= GPIO_Pin_7;    
+    IHM_SetLed(USER_LED0,TOG);  
   }
 }
 

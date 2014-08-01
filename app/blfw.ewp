@@ -1952,6 +1952,15 @@
     </file>
   </group>
   <group>
+    <name>ihm</name>
+    <file>
+      <name>$PROJ_DIR$\ihm.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ihm.h</name>
+    </file>
+  </group>
+  <group>
     <name>iv</name>
     <file>
       <name>$PROJ_DIR$\IV.c</name>

@@ -34,11 +34,18 @@
 #include "timer.h"
 #include "adc12.h"
 #include "IV.h"
+#include "ihm.h"
 
+/* USB */
 #include "usb_core.h"
 #include "usbd_core.h"
-
 #include "usbd_cdc_core.h"
+
+/* FreeRtos */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
 
 /* Private typedef -----------------------------------------------------------*/
@@ -166,17 +173,6 @@ void PendSV_Handler(void)
 {
 }
 
-/**
-* @brief  This function handles SysTick Handler.
-* @param  None
-* @retval None
-*/
-void SysTick_Handler(void)
-{
-  SYSTICK_tick();
-  IV_Timertick();
-}
-
 /* Somente para Testes de modos Capture e Compare */
 void TIM1_CC_IRQHandler(void)
 { 
@@ -252,6 +248,40 @@ void TIM8_CC_IRQHandler(void)
     TIM8_tick();
   }
   
+}
+
+void EXTI9_5_IRQHandler(void)
+{
+  PB_T pb_flag;
+  xQueueHandle * pb_queue;
+  xTaskHandle * ihm_task_handle;
+  portBASE_TYPE TaskWokenByPost;
+  
+  TaskWokenByPost = pdFALSE;
+  
+  pb_queue = IHM_GetPBQueuePointer();
+  ihm_task_handle = IHM_GetTaskHandlePointer();
+  
+  xTaskResumeFromISR(*ihm_task_handle);
+  
+  
+  if(EXTI_GetITStatus(EXTI_Line5) != RESET)
+  {    
+    pb_flag = USER_B1;
+    
+    TaskWokenByPost = xQueueSendFromISR( *pb_queue, &pb_flag, &TaskWokenByPost );
+    
+    EXTI_ClearITPendingBit(EXTI_Line5);
+  } 
+  
+  if(EXTI_GetITStatus(EXTI_Line6) != RESET)
+  {    
+    pb_flag = USER_B2;
+    
+    TaskWokenByPost = xQueueSendFromISR( *pb_queue, &pb_flag, &TaskWokenByPost );
+    
+    EXTI_ClearITPendingBit(EXTI_Line6);
+  }  
 }
 
 void DMA2_Stream0_IRQHandler(void)
