@@ -254,22 +254,26 @@ void EXTI9_5_IRQHandler(void)
 {
   PB_T pb_flag;
   xQueueHandle * pb_queue;
-  xTaskHandle * ihm_task_handle;
+  xSemaphoreHandle * ihm_pbsem;
   portBASE_TYPE TaskWokenByPost;
+  portBASE_TYPE TaskWoken;
   
-  TaskWokenByPost = pdFALSE;
+  TaskWokenByPost = TaskWoken = pdFALSE;
   
   pb_queue = IHM_GetPBQueuePointer();
-  ihm_task_handle = IHM_GetTaskHandlePointer();
+  ihm_pbsem = IHM_GetPBSemPointer();  
   
-  xTaskResumeFromISR(*ihm_task_handle);
-  
+  //Yes, a the bp_sem is kind of useless here, queue can be used to
+  //put the task in running state so you dont need the semaphore,
+  //i used a semaphore for demonstration purpouses
   
   if(EXTI_GetITStatus(EXTI_Line5) != RESET)
   {    
     pb_flag = USER_B1;
     
     TaskWokenByPost = xQueueSendFromISR( *pb_queue, &pb_flag, &TaskWokenByPost );
+    
+    xSemaphoreGiveFromISR( *ihm_pbsem, &TaskWoken );
     
     EXTI_ClearITPendingBit(EXTI_Line5);
   } 
@@ -279,6 +283,8 @@ void EXTI9_5_IRQHandler(void)
     pb_flag = USER_B2;
     
     TaskWokenByPost = xQueueSendFromISR( *pb_queue, &pb_flag, &TaskWokenByPost );
+    
+    xSemaphoreGiveFromISR( *ihm_pbsem, &TaskWoken );
     
     EXTI_ClearITPendingBit(EXTI_Line6);
   }  

@@ -31,6 +31,7 @@ typedef enum LED_VALUE_TAG
 void IHM_Init(void);
 xQueueHandle * IHM_GetPBQueuePointer(void);
 xTaskHandle * IHM_GetTaskHandlePointer(void);
+xSemaphoreHandle * IHM_GetPBSemPointer(void);
 void IHM_SetLed(LED_T led, LED_VALUE_T value);
 
 #endif /* __IHM_H */

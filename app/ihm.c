@@ -14,6 +14,7 @@ typedef struct IHM_TAG
 {
   xTaskHandle task_handle;
   xQueueHandle pb_queue;
+  xSemaphoreHandle pb_bsem;
   TickType_t xDebounceDelay;
   TickType_t xDebounceDelayTime;
   
@@ -34,6 +35,7 @@ void IHM_Init()
   
   //Initializing local variables and rtos  
   ihm.pb_queue = xQueueCreate(IHM_PB_EVENTS_SIZE, sizeof(PB_T));  
+  vSemaphoreCreateBinary(ihm.pb_bsem);
   
   //Initializing hardware  
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
@@ -163,6 +165,11 @@ xTaskHandle * IHM_GetTaskHandlePointer()
   return &ihm.task_handle;
 }
 
+xSemaphoreHandle * IHM_GetPBSemPointer()
+{
+  return &ihm.pb_bsem;
+}
+
 void IHM_TaskCreate()
 {
   xTaskCreate( vIHMTask, "IHM", IHM_STACK_SIZE, NULL, IHM_TASK_PRIORITY, &ihm.task_handle);    
@@ -178,25 +185,24 @@ static void vIHMTask( void *pvParameters )
   
   for(;;)
   {
-    if(xQueueReceive(ihm.pb_queue, &rx, (TickType_t) 10) == pdTRUE)
+    if(xSemaphoreTake(ihm.pb_bsem, ( portTickType ) 100) == pdTRUE)
     {
-      switch(rx)
+      if(xQueueReceive(ihm.pb_queue, &rx, (TickType_t) 10) == pdTRUE)
       {
-      case USER_B1:
-        IV_Perform_Curve();
-        vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
-        xQueueReset(ihm.pb_queue);   
-        break;
-        
-      case USER_B2:
-        vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
-        xQueueReset(ihm.pb_queue); 
-        break;
-      }
-    }
-    else
-    {
-      vTaskSuspend(ihm.task_handle);
-    }      
+        switch(rx)
+        {
+        case USER_B1:
+          IV_Perform_Curve();
+          vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
+          xQueueReset(ihm.pb_queue);   
+          break;
+          
+        case USER_B2:
+          vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
+          xQueueReset(ihm.pb_queue); 
+          break;
+        }
+      }      
+    }  
   }
 }
