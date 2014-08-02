@@ -57,6 +57,7 @@ static void vTestTask( void *pvParameters );
 #include "adc12.h"
 #include "IV.h"
 #include "ihm.h"
+#include "blrtc.h"
 
 /******************************************************************************/
 /* MAIN */
@@ -95,6 +96,7 @@ int main()
             &USR_cb);
 #endif  
      
+  BLRTC_Init();   
   DAC_HwInit();
   
   /* Pulse capture and reproduction using tim1*/

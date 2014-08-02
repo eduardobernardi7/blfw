@@ -8,6 +8,7 @@
 #include "IV.h"
 #include "adc12.h"
 #include "ihm.h"
+#include "blrtc.h"
 
 //FATFS stack
 #include "stm322xg_eval_sdio_sd.h"
@@ -110,6 +111,8 @@ void IV_SetCurrent(uint16_t current_in_ma);
 int IV_Curve2File(char * filename, IV_CURVE_T * curve, IV_FATFS_T * fatfs_handle);
 void IV_Request_Point(void);
 void IV_TaskCreate(void);
+
+void rtc2string(RTC_TimeTypeDef time, char * hold_string);
 
 // Initial state. Just performs the initial transition
 FSM_State IV_HAND_IDLE(IV_TRACER_T *me, FSM_Event *e)
@@ -312,7 +315,7 @@ static void vIVTask( void *pvParameters )
 int IV_Curve2File(char * filename, IV_CURVE_T * curve, IV_FATFS_T * fatfs_handle)
 {
   uint32_t i;
-  char welcome_string[32];
+  char header[64];
   char data_string[128];
   UINT BytesWritten;
   unsigned int n_attempt;
@@ -357,9 +360,9 @@ int IV_Curve2File(char * filename, IV_CURVE_T * curve, IV_FATFS_T * fatfs_handle
   
   f_lseek(&fatfs_handle->fil, (fatfs_handle->fil.fsize)); // EOF please
   
-  strcpy(welcome_string, "Starting LOG:\r\n"); 
+  rtc2string(BLRTC_GetTime(), header);
   
-  fatfs_handle->res = f_write(&fatfs_handle->fil, welcome_string, strlen(welcome_string), &BytesWritten);
+  fatfs_handle->res = f_write(&fatfs_handle->fil, header, strlen(header), &BytesWritten);
   
   if (fatfs_handle->res != FR_OK)
   {
@@ -376,4 +379,16 @@ int IV_Curve2File(char * filename, IV_CURVE_T * curve, IV_FATFS_T * fatfs_handle
   fatfs_handle->res = f_close(&fatfs_handle->fil);
   
   return 1;
+}
+
+void rtc2string(RTC_TimeTypeDef time, char * hold_string)
+{
+  if(time.RTC_H12 == RTC_H12_AM)
+  {
+    sprintf(hold_string, "START LOG - RTC -> %d :: %d :: %d  [AM]\r\n", time.RTC_Hours, time.RTC_Minutes, time.RTC_Seconds);
+  }
+  else
+  {
+    sprintf(hold_string, "RTC - %d :: %d :: %d  [PM]\r\n", time.RTC_Hours, time.RTC_Minutes, time.RTC_Seconds);
+  }  
 }
