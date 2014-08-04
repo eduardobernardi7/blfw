@@ -1,8 +1,9 @@
 #include "ihm.h"
 #include "iv.h"
+#include "ivs.h"
 #include "stm32f2xx.h"
 
-//definitions and prototypes for IV task
+//definitions and prototypes for IHM task
 #define IHM_STACK_SIZE		        configMINIMAL_STACK_SIZE + 128
 #define IHM_TASK_PRIORITY		( tskIDLE_PRIORITY + 4 )
 #define IHM_DELAY_TICK_BASE             ( ( TickType_t ) 100 )
@@ -178,31 +179,38 @@ void IHM_TaskCreate()
 static void vIHMTask( void *pvParameters )
 {
   PB_T rx;
+  SemaphoreHandle_t * ivs_time_mutex;
   
   ihm.xDebounceDelay = IHM_DELAY_TICK_BASE;
   ihm.xDebounceDelay /= portTICK_PERIOD_MS;
   ihm.xDebounceDelayTime = xTaskGetTickCount();
   
+  ivs_time_mutex = IVS_GetTimerMutex();
+  
   for(;;)
   {
-    if(xSemaphoreTake(ihm.pb_bsem, ( portTickType ) 100) == pdTRUE)
+    if(xQueueReceive(ihm.pb_queue, &rx, (TickType_t) 100) == pdTRUE)
     {
-      if(xQueueReceive(ihm.pb_queue, &rx, (TickType_t) 10) == pdTRUE)
+      switch(rx)
       {
-        switch(rx)
-        {
-        case USER_B1:
-          IV_Perform_Curve();
-          vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
-          xQueueReset(ihm.pb_queue);   
-          break;
+      case USER_B1:
+        IVS_StopCurve();
+        
+        vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
+        xQueueReset(ihm.pb_queue);
+        break;
           
-        case USER_B2:
-          vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
-          xQueueReset(ihm.pb_queue); 
-          break;
-        }
-      }      
-    }  
+       case USER_B2:
+         while(xSemaphoreTake(*ivs_time_mutex, (TickType_t) 100) == pdFALSE);
+            
+         IVS_Perform_Curve(1,3);  
+          
+         xSemaphoreGive(*ivs_time_mutex);
+
+         vTaskDelayUntil(&ihm.xDebounceDelayTime, ihm.xDebounceDelay);
+         xQueueReset(ihm.pb_queue); 
+         break;
+      }
+    }       
   }
 }

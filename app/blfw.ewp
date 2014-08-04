@@ -1955,6 +1955,15 @@
     </file>
   </group>
   <group>
+    <name>ihm</name>
+    <file>
+      <name>$PROJ_DIR$\ihm.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ihm.h</name>
+    </file>
+  </group>
+  <group>
     <name>iv</name>
     <file>
       <name>$PROJ_DIR$\IV.c</name>
@@ -1964,16 +1973,16 @@
     </file>
   </group>
   <group>
+    <name>ivs</name>
+    <file>
+      <name>$PROJ_DIR$\ivs.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ivs.h</name>
+    </file>
+  </group>
+  <group>
     <name>periph_driver</name>
-    <group>
-      <name>ihm</name>
-      <file>
-        <name>$PROJ_DIR$\ihm.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\ihm.h</name>
-      </file>
-    </group>
     <file>
       <name>$PROJ_DIR$\..\Libraries\STM32F2xx_StdPeriph_Driver\src\misc.c</name>
     </file>

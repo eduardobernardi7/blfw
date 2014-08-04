@@ -58,6 +58,7 @@ static void vTestTask( void *pvParameters );
 #include "IV.h"
 #include "ihm.h"
 #include "blrtc.h"
+#include "ivs.h"
 
 /******************************************************************************/
 /* MAIN */
@@ -70,7 +71,8 @@ static void vTestTask( void *pvParameters );
 /******************************************************************************/
 /* USER GUIDE */
 
-// Press S2 button to build a curve, if the curve was written successfully
+// Press S1 button to start the curve building procedure, 
+// if the curve was written successfully
 // on sd card USER_LED1 will be on, otherwise USER_LED2 will be on instead
 // led 0 will flash constantly indicating that FreeRtos is running !
 
@@ -110,6 +112,7 @@ int main()
   ADC12_Init();
   IV_Init();
   IHM_Init();  
+  IVS_Init();
   
 #if(1)    
   xTaskCreate( vTestTask, "LEDx", ledSTACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, ( TaskHandle_t * ) NULL );

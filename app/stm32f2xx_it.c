@@ -34,6 +34,7 @@
 #include "timer.h"
 #include "adc12.h"
 #include "IV.h"
+#include "ivs.h"
 #include "ihm.h"
 
 /* USB */
@@ -239,6 +240,12 @@ void TIM8_CC_IRQHandler(void)
 {
   __IO uint32_t current_capture;
   
+  SemaphoreHandle_t * ivs_tick_sem;
+  portBASE_TYPE TaskWoken;
+  
+  TaskWoken = pdFALSE;
+  ivs_tick_sem = IVS_GetTimerTickSem();
+  
   if (TIM_GetITStatus(TIM8, TIM_IT_CC2) == SET)
   { 
     TIM_ClearITPendingBit(TIM8, TIM_IT_CC2 );
@@ -246,34 +253,29 @@ void TIM8_CC_IRQHandler(void)
     //tim8 clock 60 Mhz, to reach 1Khz we need 60 ticks !
     TIM_SetCompare2(TIM8, current_capture + 60); // every interrupt on 60 ticks   
     TIM8_tick();
+    
+    xSemaphoreGiveFromISR( *ivs_tick_sem, &TaskWoken );    
+    portEND_SWITCHING_ISR(TaskWoken);    
   }
   
 }
 
+/* IHM - PUSH BUTTONS */
 void EXTI9_5_IRQHandler(void)
 {
   PB_T pb_flag;
   xQueueHandle * pb_queue;
-  xSemaphoreHandle * ihm_pbsem;
   portBASE_TYPE TaskWokenByPost;
-  portBASE_TYPE TaskWoken;
   
-  TaskWokenByPost = TaskWoken = pdFALSE;
+  TaskWokenByPost = pdFALSE;
   
   pb_queue = IHM_GetPBQueuePointer();
-  ihm_pbsem = IHM_GetPBSemPointer();  
-  
-  //Yes, a the bp_sem is kind of useless here, queue can be used to
-  //put the task in running state so you dont need the semaphore,
-  //i used a semaphore for demonstration purpouses
   
   if(EXTI_GetITStatus(EXTI_Line5) != RESET)
   {    
     pb_flag = USER_B1;
     
     TaskWokenByPost = xQueueSendFromISR( *pb_queue, &pb_flag, &TaskWokenByPost );
-    
-    xSemaphoreGiveFromISR( *ihm_pbsem, &TaskWoken );
     
     EXTI_ClearITPendingBit(EXTI_Line5);
   } 
@@ -284,18 +286,37 @@ void EXTI9_5_IRQHandler(void)
     
     TaskWokenByPost = xQueueSendFromISR( *pb_queue, &pb_flag, &TaskWokenByPost );
     
-    xSemaphoreGiveFromISR( *ihm_pbsem, &TaskWoken );
-    
     EXTI_ClearITPendingBit(EXTI_Line6);
   }  
+  
+  portEND_SWITCHING_ISR(TaskWokenByPost);
 }
 
+/* DMA ADC */
 void DMA2_Stream0_IRQHandler(void)
 {
   if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
   {
     ADC12_FilterDMASamples(); 
     DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
+  }
+}
+
+/* RTC ALARM  - NOT WORKING */
+void RTC_Alarm_IRQHandler(void)
+{
+  if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
+  {
+    RTC_ClearITPendingBit(RTC_IT_ALRA);
+  }  
+}
+
+/* RTC WakeUp Counter - NOT WORKING */
+void RTC_WKUP_IRQHandler(void)
+{
+  if(RTC_GetITStatus(RTC_IT_WUT) != RESET)
+  {
+    RTC_ClearITPendingBit(RTC_IT_WUT);
   }
 }
 
@@ -317,10 +338,10 @@ void SD_SDIO_DMA_IRQHANDLER(void)
 
 
 /**
-  * @brief  This function handles EXTI15_10_IRQ Handler.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles EXTI15_10_IRQ Handler.
+* @param  None
+* @retval None
+*/
 #ifdef USE_USB_OTG_FS  
 void OTG_FS_WKUP_IRQHandler(void)
 {
@@ -335,10 +356,10 @@ void OTG_FS_WKUP_IRQHandler(void)
 #endif
 
 /**
-  * @brief  This function handles EXTI15_10_IRQ Handler.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles EXTI15_10_IRQ Handler.
+* @param  None
+* @retval None
+*/
 #ifdef USE_USB_OTG_HS  
 void OTG_HS_WKUP_IRQHandler(void)
 {
@@ -353,10 +374,10 @@ void OTG_HS_WKUP_IRQHandler(void)
 #endif
 
 /**
-  * @brief  This function handles OTG_HS Handler.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles OTG_HS Handler.
+* @param  None
+* @retval None
+*/
 #ifdef USE_USB_OTG_HS  
 void OTG_HS_IRQHandler(void)
 #else
@@ -368,20 +389,20 @@ void OTG_FS_IRQHandler(void)
 
 #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED 
 /**
-  * @brief  This function handles EP1_IN Handler.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles EP1_IN Handler.
+* @param  None
+* @retval None
+*/
 void OTG_HS_EP1_IN_IRQHandler(void)
 {
   USBD_OTG_EP1IN_ISR_Handler (&USB_OTG_dev);
 }
 
 /**
-  * @brief  This function handles EP1_OUT Handler.
-  * @param  None
-  * @retval None
-  */
+* @brief  This function handles EP1_OUT Handler.
+* @param  None
+* @retval None
+*/
 void OTG_HS_EP1_OUT_IRQHandler(void)
 {
   USBD_OTG_EP1OUT_ISR_Handler (&USB_OTG_dev);
