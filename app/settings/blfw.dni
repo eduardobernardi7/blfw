@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-970184878
+Checksum=1143006565
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -48,6 +48,8 @@ Enabled=0
 ShowSource=1
 [struct_types]
 Fmt0=DMA_InitTypeDef-DMA_PeripheralBaseAddr	4	0
+[watch_formats]
+Fmt0={W}0:i	3	0
 [DataLog]
 LogEnabled=0
 SumEnabled=0

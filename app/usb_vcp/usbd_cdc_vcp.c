@@ -191,7 +191,7 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
     }
     else if (linecoding.datatype == 8)
     {
-      APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i] ;
+      APP_Rx_Buffer[APP_Rx_ptr_in] = Buf[i];
     }
     APP_Rx_ptr_in++;    
     
@@ -224,7 +224,7 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
 static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 { 
   int i;
-  VCP_DataTx(Buf,Len);
+  //VCP_DataTx(Buf,Len);
   
   for(i = 0; i < Len; i++)
   {
@@ -259,6 +259,11 @@ void EVAL_COM_IRQHandler(void)
 void USB_SendString(char * string)
 {
   VCP_DataTx((uint8_t*)string, strlen(string));
+}
+
+uint16_t USB_SendPacket(uint8_t * packet, uint32_t size)
+{
+  return VCP_DataTx(packet, size);
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

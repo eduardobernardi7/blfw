@@ -70,6 +70,7 @@ typedef struct
 /* Exported functions ------------------------------------------------------- */
 
 void USB_SendString(char * string);
+uint16_t USB_SendPacket(uint8_t * packet, uint32_t size);
 
 #endif /* __USBD_CDC_VCP_H */
 

@@ -40,7 +40,7 @@
           
           
           
-        <item>RCC_Clocks</item><item>1.0/(120000000/100)</item><item>SystemCoreClock</item><item>adc12buf</item><item>DMA_InitStructure</item><item>ADC3ConvertedValue</item><item>debug</item><item>capture_p</item><item>Buffer</item><item>APP_Rx_ptr_in</item><item>APP_RX_DATA_SIZE</item><item>ivs_tracer</item><item>current_time</item><item>seconds_dif</item><item>sum_cur</item><item>sum_last</item><item>init_time</item><item>e</item><item>event</item><item/></expressions>
+        <item>RCC_Clocks</item><item>1.0/(120000000/100)</item><item>SystemCoreClock</item><item>adc12buf</item><item>DMA_InitStructure</item><item>ADC3ConvertedValue</item><item>debug</item><item>capture_p</item><item>Buffer</item><item>APP_Rx_ptr_in</item><item>APP_RX_DATA_SIZE</item><item>ivs_tracer</item><item>current_time</item><item>seconds_dif</item><item>sum_cur</item><item>sum_last</item><item>init_time</item><item>e</item><item>event</item><item>me</item><item>Len</item><item>fw_len</item><item>i</item><item>j</item><item>packet</item><item/></expressions>
         <col-names>
           
           
@@ -54,7 +54,7 @@
           
         <item>150</item><item>150</item><item>100</item><item>149</item></col-widths>
       </WATCH_1>
-    </Static>
+    <Find-in-Files><ColumnWidth0>664</ColumnWidth0><ColumnWidth1>94</ColumnWidth1><ColumnWidth2>1138</ColumnWidth2></Find-in-Files></Static>
     <Windows>
       
       
@@ -81,20 +81,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-15121-29113</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
+      <SelectedTab>0</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-15121-29113</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-15700-21023</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usbp.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>166</SelStart2><SelEnd2>189</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usbp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>24</YPos2><SelStart2>1029</SelStart2><SelEnd2>1029</SelEnd2></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ivs.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>353</SelStart2><SelEnd2>355</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ivs.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>381</SelStart2><SelEnd2>381</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usb_vcp\usbd_cdc_vcp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>203</YPos2><SelStart2>6763</SelStart2><SelEnd2>6763</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>62</YPos2><SelStart2>2325</SelStart2><SelEnd2>2325</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usbp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>202</YPos2><SelStart2>4909</SelStart2><SelEnd2>4909</SelEnd2></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ivs.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>177</YPos2><SelStart2>4317</SelStart2><SelEnd2>4367</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usb_vcp\usbd_cdc_vcp.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>232</YPos2><SelStart2>7367</SelStart2><SelEnd2>7381</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usb_vcp\usbd_cdc_vcp.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>39</YPos2><SelStart2>2682</SelStart2><SelEnd2>2682</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>62</YPos2><SelStart2>2325</SelStart2><SelEnd2>2325</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\fsm.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>1</YPos2><SelStart2>1725</SelStart2><SelEnd2>1725</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\usb_vcp\usbd_conf.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>63</YPos2><SelStart2>2669</SelStart2><SelEnd2>2669</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\stm32f2xx_it.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>84</YPos2><SelStart2>3963</SelStart2><SelEnd2>3963</SelEnd2></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00c2d358><key>iaridepm.enu1</key></Toolbar-00c2d358><Toolbar-0b61bf90><key>armstlink.enu1</key></Toolbar-0b61bf90></Sizes></Row0><Row1><Sizes><Toolbar-0b61bec8><key>debuggergui.enu1</key></Toolbar-0b61bec8></Sizes></Row1></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>731</Bottom><Right>302</Right><x>-2</x><y>-2</y><xscreen>199</xscreen><yscreen>200</yscreen><sizeHorzCX>103646</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>158333</sizeVertCX><sizeVertCY>734469</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>731</Bottom><Right>539</Right><x>-2</x><y>-2</y><xscreen>199</xscreen><yscreen>200</yscreen><sizeHorzCX>103646</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>281771</sizeVertCX><sizeVertCY>734469</sizeVertCY></Rect></Wnd4></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200401</sizeVertCY></Rect></Wnd5></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0286d358><key>iaridepm.enu1</key></Toolbar-0286d358><Toolbar-0dcbd0b0><key>armstlink.enu1</key></Toolbar-0dcbd0b0></Sizes></Row0><Row1><Sizes><Toolbar-0dcbc688><key>debuggergui.enu1</key></Toolbar-0dcbc688></Sizes></Row1></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>731</Bottom><Right>302</Right><x>-2</x><y>-2</y><xscreen>199</xscreen><yscreen>200</yscreen><sizeHorzCX>103646</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>158333</sizeVertCX><sizeVertCY>734469</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>731</Bottom><Right>539</Right><x>-2</x><y>-2</y><xscreen>199</xscreen><yscreen>200</yscreen><sizeHorzCX>103646</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>281771</sizeVertCX><sizeVertCY>734469</sizeVertCY></Rect></Wnd4></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>200</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>200401</sizeHorzCY><sizeVertCX>104167</sizeVertCX><sizeVertCY>200401</sizeVertCY></Rect></Wnd5></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 
