@@ -59,6 +59,7 @@ static void vTestTask( void *pvParameters );
 #include "ihm.h"
 #include "blrtc.h"
 #include "ivs.h"
+#include "usbp.h"
 
 /******************************************************************************/
 /* MAIN */
@@ -86,6 +87,8 @@ int main()
   
   SysTick_CLKSourceConfig( SysTick_CLKSource_HCLK );
   
+  
+  
 #ifdef USB_ECHO_VCP_TEST
      USBD_Init(&USB_OTG_dev,
 #ifdef USE_USB_OTG_HS 
@@ -110,9 +113,9 @@ int main()
   TIMER8_OutputcompareCh2Init();
    
   ADC12_Init();
-  IV_Init();
   IHM_Init();  
   IVS_Init();
+  USBP_Init();
   
 #if(1)    
   xTaskCreate( vTestTask, "LEDx", ledSTACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, ( TaskHandle_t * ) NULL );

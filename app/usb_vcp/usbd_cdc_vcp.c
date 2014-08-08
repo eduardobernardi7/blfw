@@ -36,6 +36,9 @@
 #include "string.h"
 #include "stdio.h"
 
+//app includes
+#include "usbp.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -220,7 +223,14 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
 */
 static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 { 
+  int i;
   VCP_DataTx(Buf,Len);
+  
+  for(i = 0; i < Len; i++)
+  {
+    USBP_ProcessDataFromISR(Buf[i]);
+  }
+  
   return USBD_OK;
 }
 

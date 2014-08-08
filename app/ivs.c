@@ -16,7 +16,7 @@
 #include "stdio.h"
 
 //definitions for IVS task
-#define IVS_STACK_SIZE		        configMINIMAL_STACK_SIZE + 1024
+#define IVS_STACK_SIZE		        configMINIMAL_STACK_SIZE + 512
 #define IVS_TASK_PRIORITY		( tskIDLE_PRIORITY + 3 )
 
 //definitions for IVS timer task 
@@ -119,7 +119,7 @@ enum IVS_SIGNALS
 
 //Core methods for the fsm
 int IVS_Post_Event(IVS_TRACER_T *me, IVS_EVENT_T *iv_e);
-int IV_Post_EventFromISR(IVS_TRACER_T *me, IVS_EVENT_T *iv_e);
+int IVS_Post_EventFromISR(IVS_TRACER_T *me, IVS_EVENT_T *iv_e);
 void IVS_Process(void);
 
 //Tasks and its constructors methods
@@ -383,7 +383,7 @@ void IVS_Perform_CurveFromISR(unsigned int periodHours, unsigned int periodInter
   
   ivs_e.super.signal = IVS_START_NEW_CURVE;
   
-  IV_Post_EventFromISR(&ivs_tracer, &ivs_e); 
+  IVS_Post_EventFromISR(&ivs_tracer, &ivs_e); 
 }
 
 //fornece os eventos de temporizacao para construcao de curvas

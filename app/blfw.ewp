@@ -2180,6 +2180,15 @@
     </file>
   </group>
   <group>
+    <name>usbp</name>
+    <file>
+      <name>$PROJ_DIR$\usbp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usbp.h</name>
+    </file>
+  </group>
+  <group>
     <name>utils</name>
     <file>
       <name>$PROJ_DIR$\utils.c</name>
