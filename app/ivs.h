@@ -8,8 +8,9 @@
 #include "semphr.h"
 
 void IVS_Init(void) ;
-SemaphoreHandle_t * IVS_GetTimerMutex();
-SemaphoreHandle_t * IVS_GetTimerTickSem();
+SemaphoreHandle_t * IVS_GetTimerMutex(void);
+SemaphoreHandle_t * IVS_GetTimerTickSem(void);
+void IVS_TickFromISR(void);
 void IVS_Perform_Curve(unsigned int periodHours, unsigned int periodIntervalMins);
 void IVS_StopCurve(void);
 

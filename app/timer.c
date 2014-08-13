@@ -146,7 +146,7 @@ void TIMER8_OutputcompareCh2Init()
   NVIC_Init(&NVIC_InitStructure);
   
    /* TIM8 eh clockeado com 120 Mhz */
-  PrescalerValue = (uint16_t) ((SystemCoreClock) / 60000) - 1; //prescaler para 60 MHz
+  PrescalerValue = (uint16_t) ((SystemCoreClock) / 600000) - 1; //prescaler para 600 KHz
 
   TIM_TimeBaseStructure.TIM_Period = 0xFFFF; // 16 bits de resolucao
   TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
@@ -173,7 +173,7 @@ void TIMER8_OutputcompareCh2Init()
 
 void TIM8_delay_ms(__IO uint32_t nTime)
 {
-  tim8_tick = nTime;
+  tim8_tick = nTime * 10;
 
   while(tim8_tick != 0);
 }

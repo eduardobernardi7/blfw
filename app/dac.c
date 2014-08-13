@@ -1,3 +1,7 @@
+// DAC.C
+// Source file for DAC routines
+// EB - 07/2014 - Initial Version
+
 #include "dac.h"
 #include "adc12.h"
 
@@ -40,36 +44,35 @@ void DAC_HwInit()
 
 // Convert Milivolts to DAC Value
 uint16_t DAC_MilivoltsToDacVal(uint16_t val)
-{
-    uint16_t penes = ((uint16_t)(val * DAC_MAX_VALUE / ADC12_GetVref()));
-    
+{    
     return ((uint16_t)(val * DAC_MAX_VALUE / ADC12_GetVref()));
 }
 
-// Set DAC1 Value in Milivolts
-int DAC_SetDAC1ValInMilivolts(uint16_t val)
+uint16_t DAC_DacValToMilivolts(uint16_t val)
 {
-    // If value is above reference voltage, return an error
-    if (val > ADC12_GetVref()) return DAC_VALUE_OUTSIDE_BOUNDARIES;
-    
-    // Set the voltage using the formula on Page 152 of UM1061
-    DAC_SetChannel1Data(DAC_Align_12b_R, DAC_MilivoltsToDacVal(val));
-           
-    // If everything went right, no error is returned
-    return DAC_NOERROR;
+    return ((uint16_t)(val * ADC12_GetVref() / DAC_MAX_VALUE ));
 }
-
-// Set DAC2 Value in Milivolts
-int DAC_SetDAC2ValInMilivolts(uint16_t val)
+// Set DAC1 Value in Milivolts
+int DAC_SetDACValInMilivolts(uint32_t DAC_Channel, uint16_t val)
 {
     // If value is above reference voltage, return an error
-    if (val > ADC12_GetVref()) return DAC_VALUE_OUTSIDE_BOUNDARIES;
+    if (val > ADC12_GetVref()) 
+        return DAC_VALUE_OUTSIDE_BOUNDARIES;
     
-    // Set the voltage using the formula on Page 152 of UM1061
-    DAC_SetChannel2Data(DAC_Align_12b_R, DAC_MilivoltsToDacVal(val));
-    
-    // If everything went right, no error is returned
-    return DAC_NOERROR;
+    switch(DAC_Channel)
+    {
+        case DAC_Channel_1:
+            // Set the voltage using the formula on Page 152 of UM1061
+            DAC_SetChannel1Data(DAC_Align_12b_R, DAC_MilivoltsToDacVal(val));
+            return DAC_NOERROR;
+        case DAC_Channel_2:
+            // Set the voltage using the formula on Page 152 of UM1061
+            DAC_SetChannel2Data(DAC_Align_12b_R, DAC_MilivoltsToDacVal(val));
+            return DAC_NOERROR;
+        default:
+            // Return incorrect channel selection
+            return DAC_INCORRECT_CHANNEL;
+    }
 }
 
 // Set both DACs in Milivolts, in case you need them synchronized

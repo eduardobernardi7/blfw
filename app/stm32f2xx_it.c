@@ -36,6 +36,7 @@
 #include "IV.h"
 #include "ivs.h"
 #include "ihm.h"
+#include "dynload.h"
 
 /* USB */
 #include "usb_core.h"
@@ -240,22 +241,17 @@ void TIM8_CC_IRQHandler(void)
 {
   __IO uint32_t current_capture;
   
-  SemaphoreHandle_t * ivs_tick_sem;
-  portBASE_TYPE TaskWoken;
-  
-  TaskWoken = pdFALSE;
-  ivs_tick_sem = IVS_GetTimerTickSem();
-  
   if (TIM_GetITStatus(TIM8, TIM_IT_CC2) == SET)
   { 
     TIM_ClearITPendingBit(TIM8, TIM_IT_CC2 );
     current_capture = TIM_GetCapture2(TIM8);
-    //tim8 clock 60 Mhz, to reach 1Khz we need 60 ticks !
-    TIM_SetCompare2(TIM8, current_capture + 60); // every interrupt on 60 ticks   
-    TIM8_tick();
+    //tim8 clock 600 Khz, to reach 10Khz we need 60 ticks !
+    TIM_SetCompare2(TIM8, current_capture + 60); // every interrupt on 60 ticks  
     
-    xSemaphoreGiveFromISR( *ivs_tick_sem, &TaskWoken );    
-    portEND_SWITCHING_ISR(TaskWoken);    
+    TIM8_tick(); 
+    IVS_TickFromISR(); 
+    DL_TickFromISR();    
+    
   }
   
 }
@@ -297,7 +293,9 @@ void DMA2_Stream0_IRQHandler(void)
 {
   if (DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
   {
+#ifndef ADC12_IIR_DISABLED
     ADC12_FilterDMASamples(); 
+#endif
     DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
   }
 }

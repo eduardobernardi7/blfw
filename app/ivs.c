@@ -36,6 +36,7 @@
 
 #define IVS_MAX_TIME_HOURS           10      
 
+#define IVS_TIMING_PRESCALER         10
 
 // Continuous curve building status
 typedef enum CURVE_STATUS_TAG
@@ -89,20 +90,21 @@ typedef struct IVS_CURVE_TAG
 typedef struct IVS_TRACER_TAG
 {
   FSM super;
-  xQueueHandle events;
-  SemaphoreHandle_t sem_isr_tick;
-  IVS_CURVE_T curve;
-  IVS_POINT_T last_point;
-  TickType_t xPointDelay;
-  TickType_t xPointDelayTime;
-  xTaskHandle task_handle;
-  xTaskHandle timer_task_handle;
-  IVS_FATFS_T fatfs;
-  IVS_TIME_CONFIG_T time_config;
-  SemaphoreHandle_t time_config_mutex;
-  RTC_TimeTypeDef start_time;
-  RTC_TimeTypeDef last_time;
-  CURVE_STATUS_T  curve_progress_status;
+  xQueueHandle          events;
+  SemaphoreHandle_t     sem_isr_tick;
+  IVS_CURVE_T           curve;
+  IVS_POINT_T           last_point;
+  TickType_t            xPointDelay;
+  TickType_t            xPointDelayTime;
+  xTaskHandle           task_handle;
+  xTaskHandle           timer_task_handle;
+  IVS_FATFS_T           fatfs;
+  IVS_TIME_CONFIG_T     time_config;
+  SemaphoreHandle_t     time_config_mutex;
+  RTC_TimeTypeDef       start_time;
+  RTC_TimeTypeDef       last_time;
+  CURVE_STATUS_T        curve_progress_status;
+  uint32_t              timing_prescaler_cnt;
 } IVS_TRACER_T;
 
 //Valid signal for the fsm processor
@@ -206,14 +208,23 @@ FSM_State IVS_HAND_OPER(IVS_TRACER_T *me, FSM_Event *e)
     // Set DAC to zero here, to reduce temperature
     me->last_point.i = 0;
     IVS_SetCurrent(me->last_point.i);
+    
+    vTaskPrioritySet(me->task_handle, IVS_TASK_PRIORITY + 2);
+    
     if(IVS_Curve2File("CURVA_S.TXT", &me->curve, &me->fatfs) > 0)
     {
       IHM_SetLed(USER_LED1, HIGH);
+      IHM_SetLed(USER_LED2, LOW);
     }
     else
     {
       IHM_SetLed(USER_LED2, HIGH);
+      IHM_SetLed(USER_LED1, LOW);
     }
+    
+    vTaskPrioritySet(me->task_handle, IVS_TASK_PRIORITY);
+    
+    
     return FSM_TRAN(me,IVS_HAND_IDLE);
     
   case FSM_EXIT_SIGNAL:    
@@ -283,6 +294,22 @@ static void vIVSTimerTask(void * pvParameters)
   }
 }
 
+void IVS_TickFromISR()
+{
+  portBASE_TYPE TaskWoken;
+  
+  if(ivs_tracer.timing_prescaler_cnt == 0)
+  {    
+    xSemaphoreGiveFromISR(ivs_tracer.sem_isr_tick, &TaskWoken );    
+    portEND_SWITCHING_ISR(TaskWoken);  
+    ivs_tracer.timing_prescaler_cnt = IVS_TIMING_PRESCALER;
+  }
+  else
+  {
+    ivs_tracer.timing_prescaler_cnt -= 1;
+  }
+}
+
 // ivs_tracer task
 static void vIVSTask(void *pvParameters)
 {  
@@ -290,6 +317,8 @@ static void vIVSTask(void *pvParameters)
   ivs_tracer.xPointDelay = IVS_DELAY_TICK_BASE;
   ivs_tracer.xPointDelay /= portTICK_PERIOD_MS;
   ivs_tracer.xPointDelayTime = xTaskGetTickCount();
+  
+  //ADC12_CalibrateVref();
   
   for(;;)
   {
@@ -326,6 +355,9 @@ void IVS_Init(void)
   
   //Initializes mutexes
   ivs_tracer.time_config_mutex = xSemaphoreCreateMutex();
+  
+  //resets prescaler counter of timing task
+  ivs_tracer.timing_prescaler_cnt = IVS_TIMING_PRESCALER;
   
   // FSM Constructor
   FSM_Ctor(&ivs_tracer.super,IVS_HAND_IDLE);
@@ -494,7 +526,7 @@ void IVS_SetCurrent(uint16_t current_in_ma)
   
   uint16_t dac_val = ((uint16_t) (current_in_ma * IVS_CURRENT_RESISTOR));
   
-  if (DAC_SetDAC1ValInMilivolts(dac_val) == DAC_VALUE_OUTSIDE_BOUNDARIES)
+  if (DAC_SetDACValInMilivolts(DAC_Channel_1, dac_val) == DAC_VALUE_OUTSIDE_BOUNDARIES)
   {
     ivs_e.super.signal = IVS_DAC_FULL_SCALE;
     IVS_Post_Event(&ivs_tracer, &ivs_e);
@@ -592,7 +624,6 @@ void IVS_StopCurve()
   // a task de temporizacao nao eh mais necessaria
   vTaskSuspend(ivs_tracer.timer_task_handle); 
   
-  IHM_SetLed(USER_LED3, LOW);
   IHM_SetLed(USER_LED2, LOW);
   IHM_SetLed(USER_LED1, LOW);
 }

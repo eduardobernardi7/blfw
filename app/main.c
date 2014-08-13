@@ -60,6 +60,7 @@ static void vTestTask( void *pvParameters );
 #include "blrtc.h"
 #include "ivs.h"
 #include "usbp.h"
+#include "dynload.h"
 
 /******************************************************************************/
 /* MAIN */
@@ -81,6 +82,7 @@ static void vTestTask( void *pvParameters );
 int main()
 {
 
+
   //I have no idea what this means, RTOS needed nvic configured like this
   NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x0 );
   NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
@@ -101,21 +103,18 @@ int main()
             &USR_cb);
 #endif  
      
-  BLRTC_Init();   
-  DAC_HwInit();
-  
-  /* Pulse capture and reproduction using tim1*/
-  TIMER_InputCaptureCh2Init();
-  TIMER_OutputCompareCh3Init();
-  TIMER_DemoIrGenStructInit();
-  
-  /*TIM8 will be used as a tick reference timer instead of systick */
-  TIMER8_OutputcompareCh2Init();
-   
-  ADC12_Init();
+
+  DL_Init();
+  BLRTC_Init();  
+  ADC12_Init();     
+  DAC_HwInit();  
   IHM_Init();  
   IVS_Init();
   USBP_Init();
+  
+  /*TIM8 will be used as a tick reference timer instead of systick */
+  TIMER8_OutputcompareCh2Init();   
+
   
 #if(1)    
   xTaskCreate( vTestTask, "LEDx", ledSTACK_SIZE, NULL, mainFLASH_TASK_PRIORITY, ( TaskHandle_t * ) NULL );

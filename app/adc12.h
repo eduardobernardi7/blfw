@@ -18,6 +18,8 @@
 #define ADC12_INTREF_VOLTAGE      (1210)
 #define ADC12_TYPICAL_VREF        (3300)
 
+#define ADC12_IIR_DISABLED
+
 enum ADC12_CHANNELS
 {
     ADC12_CH1 = 0,      // PC0 -> ADC123_IN10 - VSENSE

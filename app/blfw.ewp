@@ -1874,6 +1874,15 @@
     </file>
   </group>
   <group>
+    <name>dynload</name>
+    <file>
+      <name>$PROJ_DIR$\dynload.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\dynload.h</name>
+    </file>
+  </group>
+  <group>
     <name>eval</name>
     <file>
       <name>$PROJ_DIR$\..\Utilities\STM32_EVAL\STM322xG_EVAL\stm322xg_eval.c</name>
@@ -2078,6 +2087,15 @@
     </file>
   </group>
   <group>
+    <name>pid</name>
+    <file>
+      <name>$PROJ_DIR$\pid.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\pid.h</name>
+    </file>
+  </group>
+  <group>
     <name>rtc</name>
     <file>
       <name>$PROJ_DIR$\blrtc.c</name>
@@ -2103,9 +2121,6 @@
     <file>
       <name>$PROJ_DIR$\systick.h</name>
     </file>
-  </group>
-  <group>
-    <name>tasks</name>
   </group>
   <group>
     <name>timer</name>

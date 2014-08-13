@@ -239,7 +239,7 @@ void IV_SetCurrent(uint16_t current_in_ma)
     
     uint16_t dac_val = ((uint16_t) (current_in_ma * IV_CURRENT_RESISTOR));
     
-    if (DAC_SetDAC1ValInMilivolts(dac_val) == DAC_VALUE_OUTSIDE_BOUNDARIES)
+    if (DAC_SetDACValInMilivolts(DAC_Channel_1, dac_val) == DAC_VALUE_OUTSIDE_BOUNDARIES)
     {
         iv_e.super.signal = IV_DAC_FULL_SCALE;
         IV_Post_Event(&iv_tracer, &iv_e);
