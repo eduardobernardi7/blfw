@@ -202,7 +202,7 @@ static void vIHMTask( void *pvParameters )
         
         if(!ihm.aux_tog)
         {
-          DL_StartPID(400);
+          DL_StartPID(250);
         }
         else
         {

@@ -23,11 +23,14 @@
 
 #define DL_EVENT_LIST_SIZE              128
 
+#define DL_TICK_TIME                    5
+
 typedef struct DL_PROBE_TAG
 {
   uint16_t measured_voltage;
   uint16_t correction;
   uint16_t dac_val;  
+  int probe_locked; 
 }DL_PROBE_T;
 
 // Event type, parameters can be added after super
@@ -41,7 +44,6 @@ typedef struct DL_TAG
 {
   FSM super;
   SemaphoreHandle_t     tick_mutex;
-  SemaphoreHandle_t     sem_isr_tick;
   uint32_t              timeout;
   xQueueHandle          events;
   xTaskHandle           task_handle;
@@ -104,12 +106,12 @@ FSM_State DL_HAND_PID(DL_T *me, FSM_Event *e)
   switch(event->super.signal)
   {
   case FSM_ENTRY_SIGNAL:
-    DL_SetTimeout(5);
+    DL_SetTimeout(DL_TICK_TIME);
     return FSM_HANDLED();  
     
   case DL_TIMEOUT:
     DL_PIDProcess();
-    DL_SetTimeout(5);
+    DL_SetTimeout(DL_TICK_TIME);
     IHM_SetLed(USER_LED3, TOG);
     break;    
     
@@ -169,9 +171,6 @@ void DL_Init()
   
   //Signal and data queue
   dl.events = xQueueCreate(DL_EVENT_LIST_SIZE, sizeof(DL_EVENT_T));  
-  
-  //tick sem
-  vSemaphoreCreateBinary(dl.sem_isr_tick);
   
   //tick mutex
   dl.tick_mutex = xSemaphoreCreateMutex();
@@ -247,9 +246,19 @@ void DL_PIDProcess()
   
   uint16_t dac_val = DAC_DacValToMilivolts(DAC_GetDataOutputValue(DAC_Channel_1));
   
-  dac_val += correction;
+  if (dac_val + correction < 0)
+  {
+    dac_val = 0;
+  }
+  else
+  {
+    dac_val += correction;
+  }
+  
   
   dl.probe.dac_val = dac_val;  
+  
+  dl.probe.probe_locked = PID_LockStatus(&dl.pid);
   
   DAC_SetDACValInMilivolts(DAC_Channel_1,dac_val);
 }
