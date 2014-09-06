@@ -2132,6 +2132,15 @@
     </file>
   </group>
   <group>
+    <name>uart</name>
+    <file>
+      <name>$PROJ_DIR$\uart.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\uart.h</name>
+    </file>
+  </group>
+  <group>
     <name>USB Device</name>
     <group>
       <name>Class</name>

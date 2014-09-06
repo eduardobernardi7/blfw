@@ -61,6 +61,7 @@ static void vTestTask( void *pvParameters );
 #include "ivs.h"
 #include "usbp.h"
 #include "dynload.h"
+#include "uart.h"
 
 /******************************************************************************/
 /* MAIN */
@@ -111,6 +112,7 @@ int main()
   IHM_Init();  
   IVS_Init();
   USBP_Init();
+  UART_Init();
   
   /*TIM8 will be used as a tick reference timer instead of systick */
   TIMER8_OutputcompareCh2Init();   

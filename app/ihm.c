@@ -4,6 +4,7 @@
 #include "iv.h"
 #include "ivs.h"
 #include "dynload.h"
+#include "uart.h"
 
 //definitions and prototypes for IHM task
 #define IHM_STACK_SIZE		        configMINIMAL_STACK_SIZE + 128
@@ -185,6 +186,8 @@ static void vIHMTask( void *pvParameters )
   PB_T rx;
   SemaphoreHandle_t * ivs_time_mutex;
   
+  uint16_t uart_data;
+  
   ihm.xDebounceDelay = IHM_DELAY_TICK_BASE;
   ihm.xDebounceDelay /= portTICK_PERIOD_MS;
   ihm.xDebounceDelayTime = xTaskGetTickCount();
@@ -202,12 +205,16 @@ static void vIHMTask( void *pvParameters )
         
         if(!ihm.aux_tog)
         {
+          uart_data = 0x0D;          
           DL_StartPID(250);
         }
         else
         {
+          uart_data = 0xFA;
           DL_StopPID();
         }
+        
+        UART_PostTxData(&uart_data);
         
         ihm.aux_tog ^= 0x01;
         

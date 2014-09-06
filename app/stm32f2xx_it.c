@@ -37,6 +37,7 @@
 #include "ivs.h"
 #include "ihm.h"
 #include "dynload.h"
+#include "uart.h"
 
 /* USB */
 #include "usb_core.h"
@@ -331,6 +332,32 @@ void SD_SDIO_DMA_IRQHANDLER(void)
   /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
   SD_ProcessDMAIRQ();
 }
+
+/* USART 2 */
+void USART2_IRQHandler(void)
+{
+  uint16_t rx_data, tx_data;
+  
+  if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
+  {
+    rx_data = (uint8_t) USART_ReceiveData(USART2);  
+    
+    UART_Post_RxDataFromISR(rx_data);
+  }
+  
+  if (USART_GetITStatus(USART2, USART_IT_TXE) == SET)
+  {
+    if(UART_Get_TxDataFromISR(&tx_data))
+    {
+      USART_SendData(USART2, tx_data);
+    }
+    else
+    {
+      USART_ITConfig (USART2, USART_IT_TXE , DISABLE);
+    }
+  }
+}
+
 
 /* USB */
 
